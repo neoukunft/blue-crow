@@ -1,129 +1,242 @@
 # 1. BlueCrow Engine 🐦‍⬛
 
 > 🚧 **STATUS: EM CONSTRUÇÃO** 🚧
-> *A engine está sendo forjada nas chamas da performance. Espere mudanças.*
+> 
+> **Pare de lutar com layout responsivo dentro de containers no Angular.**
+> Layout complexo, previsível e programável — sem media query caótica.
 
-**BlueCrow** é mais que uma simples engine de layout ou um framework; é um ecossistema pragmático e ultra-performático para Angular. Ele foi projetado para domar o caos do posicionamento espacial em sistemas de design complexos e obliterar o boilerplate clássico que assombra projetos em escala.
-
-Ao contrário de abordagens e frameworks CSS tradicionais, o BlueCrow trata o layout espacial e a navegação como uma **camada de infraestrutura programável**, injetando "Inteligência Espacial e Navegacional" diretamente no código de forma reativa.
-
-> **Nota do Engenheiro:** "Não é sobre fazer o componente caber na tela, é sobre fazer a tela entender o componente." 🐦‍⬛
+[Fundamentos de Arquitetura e Design](/docs/architecture.md)
 
 ---
 
-## 2. 🧠 Abstrações God-Tier (Problemas Reais do StackOverflow que Resolvemos)
+## ✨ Por que BlueCrow?
 
-Nosso sistema ataca de frente as dores diárias vistas em milhares de *issues* e tópicos no StackOverflow. Abaixo listamos as abstrações criadas e os problemas exatos que elas resolvem:
+Se você já tentou montar um dashboard real em Angular, conhece o problema:
 
-### 🛣️ A. Abstração de Roteamento (O Decorator `@Page`)
-No Angular padrão, as rotas são declaradas em um arquivo centralizado (`app.routes.ts`), o que causa um acoplamento severo: para adicionar uma simples página, você precisa alterar o arquivo de rotas e importar o componente.
+* Media queries acopladas ao viewport quebram layouts dentro de sidebars/modais
+* CSS Grid fica declarativo demais quando o layout precisa reagir a estado
+* Lógica de layout espalhada entre HTML, CSS e TS
+* Ajustes simples viram cascatas de `if`, classes e bindings
 
-**Problemas resolvidos (StackOverflow Issues):**
-* **Merge Conflicts em Times Grandes**: Em projetos grandes, o arquivo de rotas raiz é o "hotspot" de conflitos de Git. Com o nosso decorator, a rota "se declara sozinha". A injeção da rota é dinâmica, tornando o núcleo de navegação imutável e livre de conflitos.
-* **Boilerplate de Lifecycle**: Frequentemente desenvolvedores perguntam no StackOverflow como "rastrear" métricas ou logs de entrada/saída em todas as páginas. Nossa abstração injeta essa lógica diretamente no prototype usando o Decorator, centralizando telemetria sem que o desenvolvedor da página precise escrever uma linha de código extra.
-* **Inversão de Dependência**: O componente agora é o "dono" de sua rota, facilitando uma modularização real (*Feature-based folder structure* levado ao limite).
+**BlueCrow muda o modelo:**
 
-### 📐 B. Abstração de Layout Espacial (`BlueCrowLayout`)
-Resolvemos a eterna briga entre o mundo estático/declarativo do CSS e o dinâmico/imperativo do TypeScript.
-
-**Problemas resolvidos (StackOverflow Issues):**
-* **"How to change CSS Grid from TypeScript?"**: A resposta padrão de fóruns costuma ser abusar do `[style.grid-template-columns]`. No entanto, isso polui a árvore HTML e força a engine. Nós abstraímos isso para uma **CSS Variable Bridge**, onde o TS só altera variáveis e mantemos a altíssima performance do motor CSS nativo.
-* **"ExpressionChangedAfterItHasBeenCheckedError"**: Ao tentar mudar o layout baseado no tamanho do DOM durante o ciclo de vida, este erro famigerado do Angular ataca sem dó. Ao gerenciar nossos *breakpoints* de container via `ResizeObserver` com referências a *Signals* (rodando fora desse ciclo imediato), nós burlamos a checagem síncrona com segurança e elegância.
-* **"Responsive Layout inside a Sidebar"**: Tentativas de usar *Media Queries* falham duramente aqui porque elas olham estritamente para a tela. Nossa engine utiliza **Container Queries** (via ResizeObserver hook), permitindo que um componente modifique seu próprio display dependendo exclusivamente do humilde espaço que o elemento pai lhe concede, não da resolução do monitor de 4k. 
-
-### 🔮 C. Gestão de Memória e Registry Reativo
-Substituímos o clássico padrão "Service per Component" por um ecossistema incrivelmente seguro e reativo de *layoutRegistry* movido a Signals para orquestrar dependências e conexões isoladas.
-
-**Problemas resolvidos (StackOverflow Issues):**
-* **"Communication between Directive and Component"**: Normalmente, passar dados espaciais entre nós tão distintos exige emitir inúmeros `@Output`s ou criar vários Services compartilhados. Nossa função global `getLayout(id)` permite que qualquer parte do sistema e elemento remoto "ache" o layout do outro de forma super segura e reativa através de um Signal.
-* **"Memory Leaks with Observers"**: Muitos desenvolvedores inexperientes injetam classes de ResizeObserver e as vezes MutationObserver e rapidamente esquecem de chamar o santo `.disconnect()`. Nosso método centralizado `.destroy()` construído no ciclo de vida da engine garante que, quando o componente morre, todos os "vigias" também descem à cova com ele.
+> Em vez de forçar componentes a caberem no layout, o layout **responde ao contexto**.
 
 ---
 
-## 3. 🎯 Análise de "Maturidade de Engenharia"
+## 🚀 Exemplo (o “aha moment”)
 
-Nossa abordagem ataca diretamente os paradigmas do "Spaghetti Code". Em vez de termos centenas de Media Queries, `if`/`else` soltos pelas camadas CSS e arquivos injetando lógicas bagunçadas, unificamos Inteligência Espacial e a Inteligência Navegacional num formato sólido.
+### ❌ Abordagem comum (CSS + Angular)
 
-| Recurso BlueCrow | Nível de Abstração | O que resolve na prática (Real World) |
-| :--- | :--- | :--- |
-| **`@Page` Decorator** | *Meta-programming* | Elimina o gerenciamento manual de rotas e centraliza Hooks e telemetria globalmente. |
-| **`data-area` Selector** | *Shadow DOM-like logic* | Permite mover blocos livremente pelo container sem ser oprimido pela hierarquia exata do DOM baseando-se apenas num nome (target-based). |
-| **Signal Registry** | *Service Locator Pattern* | Ajuda a orquestrar Layouts complexos remotamente (ex: expandir footer, encolher sidebar) numa comunicação fácil sem acoplamento. |
-| **CSS Variable Bridge** | *Rendering Optimization* | Mantém o trabalho braçal da renderização no motor C++ do CSS, fazendo com que nosso TS funcione estritamente de cérebro neural. |
+* múltiplas media queries
+* bindings de estilo
+* lógica espalhada
 
----
+### ✅ Com BlueCrow
 
-## 4. 🛠️ Como Funciona (Show me the Code)
-
-### 1. Roteamento Fantasma
-```typescript
-@Page({
-  path: 'dashboard',
-  title: 'Painel Executivo',
-  data: { role: 'admin' }
-})
-export class DashboardComponent {
-  // Ao decorar, o componente está registrado e pronto para navegar.
-}
-```
-
-### 2. Definindo a Estrutura (DOM)
 ```html
-<main [blueCrowLayout]="'main-grid'">
-  <!-- Sem classes utilitárias insanas. Só marcações táticas -->
+<main blueCrowLayout="dashboard">
   <aside data-area="sidebar"></aside>
   <section data-area="content"></section>
 </main>
 ```
 
-### 3. Orquestrando Reativamente (TS)
-```typescript
-export class ApplicationComponent {
-  // Observando nosso container via locator pattern com tipagem
-  layoutMain = getLayout('main-grid');
+```ts
+const layout = getLayout('dashboard');
 
-  ngOnInit() {
-    const layout = this.layoutMain();
-    if (!layout) return;
+layout()?.setup({
+  columns: ['250px', '1fr'],
+  boxModel: { spaceBetweenThem: 16 }
+});
 
-    // 1. Config base de altíssima performance
-    layout.setup({
-      columns: ['250px', '1fr'],
-      boxModel: { spaceBetweenThem: 20 }
-    });
+layout()?.responsive.set(
+  { maxWidth: 768 },
+  { columns: ['1fr'], direction: 'column' }
+);
 
-    // 2. Container Query (A mágica acontece)
-    layout.responsive.set({ maxWidth: 768 }, {
-      columns: ['1fr'],
-      direction: 'column'
-    });
+layout()?.setArea('sidebar', { column: 1, row: '1 / 3' });
+```
 
-    // 3. Modifica e joga pra grid com facilidade
-    layout.setArea('sidebar', { column: 1, row: '1 / 3' });
+👉 **Sem media query manual. Sem bindings confusos. Sem caos.**
+
+---
+
+## 🧠 Como funciona
+
+BlueCrow trata layout como **estado programável**, não apenas estilo.
+
+* 🧩 **Grid Engine** — baseado em CSS Grid + variáveis CSS (alta performance)
+* 📦 **Container-first responsiveness** — reage ao tamanho do container, não da tela
+* 🎯 **Target-based positioning** — posiciona por `data-area`, não por hierarquia rígida
+* ⚡ **CSS Variable Bridge** — TS define intenção, o browser renderiza rápido
+
+---
+
+## 📦 Instalação
+
+```bash
+npm install @bluecrow/angular
+```
+
+---
+
+## 🔧 Uso básico
+
+### 1. Adicione a directive
+
+```ts
+import { BlueCrowLayoutDirective } from '@bluecrow/angular';
+```
+
+---
+
+### 2. Defina o layout no template
+
+```html
+<div blueCrowLayout="main">
+  <aside data-area="sidebar"></aside>
+  <section data-area="content"></section>
+</div>
+```
+
+---
+
+### 3. Controle via TypeScript
+
+```ts
+const layout = getLayout('main');
+
+layout()?.setup({
+  columns: ['250px', '1fr']
+});
+
+layout()?.setArea('sidebar', {
+  column: 1,
+  row: '1 / 3'
+});
+```
+
+---
+
+## 📐 Responsividade baseada em container
+
+```ts
+layout()?.responsive.set(
+  { maxWidth: 768 },
+  {
+    columns: ['1fr'],
+    direction: 'column'
   }
-}
+);
+```
+
+👉 Funciona dentro de qualquer contexto:
+
+* sidebar
+* modal
+* micro-frontend
+
+---
+
+## 🎯 Posicionamento por área
+
+```html
+<section data-area="content"></section>
+```
+
+```ts
+layout()?.setArea('content', {
+  column: 2,
+  row: 1
+});
+```
+
+👉 Sem depender da estrutura rígida do DOM.
+
+---
+
+## 🎨 Integração com Design Tokens
+
+BlueCrow é **agnóstico a design system**.
+
+Use tokens via CSS variables:
+
+```ts
+layout()?.setBoxModel({
+  spaceBetweenThem: 'var(--spacing-md)'
+});
+```
+
+Ou com helper tipado:
+
+```ts
+spaceBetweenThem: tokens.spacing.md
 ```
 
 ---
 
-## 5. 🎨 A Ponte Visual (CSS Bridge)
+## 🧩 API principal
 
-A engine pede como contrato básico algumas classes limpas com variáveis para controlar as rédeas da UI de forma universal e hiper veloz.
+```ts
+layout.setup(config)
+layout.setArea(name, config)
+layout.responsive.set(breakpoint, config)
 
-```css
-/* O CSS puro não precisa mudar, apenas reage as variaveis do TS */
-.grid { display: grid; }
-.grid-template-columns { grid-template-columns: var(--cols); }
-.grid-template-rows { grid-template-rows: var(--rows); }
-.grid-auto-flow { grid-auto-flow: var(--direction); }
-
-/* Injetamos vida na área baseada onde o TS pedir */
-.grid-area {
-    grid-column: var(--area-col);
-    grid-row: var(--area-row);
-}
+layout.setColumns([...])
+layout.setRows([...])
+layout.setDirection(...)
+layout.setBoxModel(...)
 ```
 
 ---
 
-*Feito na raça, forjado com Signals. A revolução espacial já começou.* 🐦‍⬛
+## 🧹 Lifecycle
+
+BlueCrow gerencia automaticamente:
+
+* ResizeObserver
+* MutationObserver
+* cleanup no destroy
+
+---
+
+## 🧠 Filosofia
+
+* Layout é **estado**, não só estilo
+* Responsividade deve ser **local (container)**
+* O browser deve fazer o trabalho pesado (CSS)
+* A API deve ser **simples, previsível e explícita**
+
+---
+
+## ⚠️ O que BlueCrow NÃO é
+
+* ❌ Não é framework completo
+* ❌ Não substitui Angular Router
+* ❌ Não gerencia estado global
+* ❌ Não impõe design system
+
+---
+
+## 🗺️ Roadmap (resumido)
+
+* ✅ Core de layout (Grid + Responsive)
+* 🔄 Melhorias de DX
+* 🔌 Plugins opcionais (router, store — fora do core)
+* 🌐 Futuro: suporte a múltiplos ambientes
+
+---
+
+## 🤝 Contribuição
+
+PRs são bem-vindos — especialmente:
+
+* exemplos reais de uso
+* melhorias de DX
+* casos de layout complexos
+
+---
+
+## 📄 Licença
+
+MIT
