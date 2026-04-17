@@ -1,0 +1,21 @@
+<div [blueCrowLayout]="{
+  name: 'template',
+  rows: [60, '1fr']
+}">
+
+  <header style="background: #212121; color: white; box-shadow: 0px 5px 15px -1px #1d1d1d; z-index: 998;">
+    <p>Header</p>
+  </header>
+
+  <main blueCrowLayout="main">
+    <section id="content" style="background: #212121; color: white; padding: 25px;">
+      <p>This is Section</p>
+    </section>
+
+    <section id="navbar" style="background: #1d1d1d; color: white; padding: 25px; z-index: 998;">
+      <p>This is Navbar</p>
+    </section>
+
+    <aside id="navbar" style="background: #111111; color: white; padding: 25px; z-index: 999;"></aside>
+  </main>
+</div>

@@ -1,1 +1,98 @@
 /* You can add global styles to this file, and also import other style files */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.grid {
+    display: grid;
+}
+
+.inline-grid {
+    display: inline-grid;
+}
+
+.grid-template-columns {
+    grid-template-columns: var(--cols);
+}
+
+.grid-template-rows {
+    grid-template-rows: var(--rows);
+}
+
+.grid-area {
+    grid-column: var(--area-col);
+    grid-row: var(--area-row);
+}
+
+.grid-auto-flow {
+    grid-auto-flow: var(--direction);
+}
+
+.box-padding {
+    padding: var(--padding);
+}
+
+.box-margin {
+    margin: var(--margin);
+}
+
+.box-gap {
+    gap: var(--gap);
+}
+
+.box-justify-content {
+    justify-content: var(--justify-content);
+}
+
+.box-align-content {
+    align-content: var(--align-content);
+}
+
+.box-justify-items {
+    justify-items: var(--justify-items);
+}
+
+.box-align-items {
+    align-items: var(--align-items);
+}
+
