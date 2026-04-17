@@ -1,7 +1,3 @@
-Este README foi estruturado para refletir a sofisticação da arquitetura que você construiu. Ele foca na separação de camadas, na inteligência reativa dos Signals e na engine de layout baseada em Container Queries.
-
----
-
 # 1. BlueCrow Layout Engine 🐦‍⬛
 
 **BlueCrow** é uma engine de layout pragmática e ultra-performática para Angular, projetada para resolver o caos do posicionamento espacial em sistemas de design complexos.
