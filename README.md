@@ -73,8 +73,8 @@ Use a diretiva `blueCrowLayout` para transformar qualquer elemento em um nó int
 
 ```html
 <main [blueCrowLayout]="'main-grid'">
-  <aside data-name="sidebar"></aside>
-  <section data-name="content"></section>
+  <aside data-area="sidebar"></aside>
+  <section data-area="content"></section>
 </main>
 ```
 
